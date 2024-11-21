@@ -1,20 +1,82 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Album {
+  id            Int         @id @default(autoincrement())
+  companyId     Int?
+  contentInfoId Int
+  Company       Company?    @relation(fields: [companyId], references: [id])
+  ContentInfo   ContentInfo @relation(fields: [contentInfoId], references: [id])
+  Songs          Song[]
+  Categories      Category[]  @relation("CategoryToAlbum")
+}
 
-    @@index([name])
+model Category {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String
+  Albums       Album[]    @relation("CategoryToAlbum")
+  Playlists    Playlist[]
+  Songs        Song[]
+}
+
+model Company {
+  id    Int     @id @default(autoincrement())
+  name  String
+  slug  String  @unique
+  Albums Album[]
+  Songs  Song[]
+}
+
+model ContentInfo {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  slug        String     @unique
+  createdAt   DateTime   @db.Timestamptz
+  imgUrl      String?
+  url         String?
+  Albums      Album[]
+  Playlists    Playlist[]
+  Songs        Song[]
+}
+
+model Playlist {
+  id            Int         @id @default(autoincrement())
+  contentInfoId Int
+  ContentInfo   ContentInfo @relation(fields: [contentInfoId], references: [id])
+  Categories      Category[]
+  Songs          Song[]
+}
+
+model Song {
+  id            Int         @id @default(autoincrement())
+  typeContent   ContentType
+  difficulty    Difficulty  @default(LOW)
+  albumId       Int?
+  companyId     Int?
+  contentInfoId Int
+  Album         Album?      @relation(fields: [albumId], references: [id])
+  Company       Company?    @relation(fields: [companyId], references: [id])
+  ContentInfo   ContentInfo @relation(fields: [contentInfoId], references: [id])
+  Categories      Category[]
+  Playlists      Playlist[]
+}
+
+enum ContentType {
+  VIDEO
+  ARTICLE
+  CODE
+}
+
+enum Difficulty {
+  LOW
+  MEDIUM
+  HARD
 }
