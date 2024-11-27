@@ -49,7 +49,7 @@ async function main() {
           slug: "cypherpunks-audio-course",
           createdAt: new Date("2022-02-24"),
           imgUrl:
-            "https://utfs.io/f/BCMCAtcvwXHD3QyPvDFzbdLTGYqU6msoiV28PFaA5pSXCWln",
+            "https://utfs.io/f/BCMCAtcvwXHD4ERFJqMzOMpEvYhUeSFxBwyR4H7qLDod9mI5",
           url: "https://platzi.com/cursos/audiocurso-cypherpunks/",
         },
       },
