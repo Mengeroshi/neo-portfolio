@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-
+import localFont from "next/font/local";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
@@ -9,12 +9,17 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
+const triakisFont = localFont({
+  src: "../../public/fonts/Triakis-Font-VF.ttf",
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={triakisFont.className}>
+      <body className="flex min-h-screen flex-col bg-black">{children}</body>
     </html>
   );
 }
