@@ -131,7 +131,8 @@ export class Pixelit {
     return selectedColor;
   }
 
-  public pixelate(): this {
+  public async pixelate(): Promise<this> {
+    await this.waitForImageLoad(this.drawfrom);
     this.drawto.width = this.drawfrom.naturalWidth;
     this.drawto.height = this.drawfrom.naturalHeight;
     let scaledW = this.drawto.width * this.scale;
@@ -341,8 +342,19 @@ export class Pixelit {
 
     return this;
   }
+  private async waitForImageLoad(image: HTMLImageElement): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (image.complete) {
+        resolve();
+      } else {
+        image.onload = () => resolve();
+        image.onerror = reject;
+      }
+    });
+  }
 
-  public draw(): this {
+  public async draw(): Promise<this> {
+    await this.waitForImageLoad(this.drawfrom);
     this.drawto.width = this.drawfrom.width;
     this.drawto.height = this.drawfrom.height;
     this.ctx.drawImage(this.drawfrom, 0, 0);

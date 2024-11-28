@@ -24,17 +24,25 @@ export const PixeledImg = ({
   color?: string;
   pixelNumber?: number;
 }) => {
-  let px: Pixelit;
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    px = new Pixelit({
-      from: id ? IMGFROMSTRING + id : undefined,
-      to: id ? CANVASTOSTRING + id : undefined,
-      scale: pixelNumber ?? 25,
-    });
+    const init = async () => {
+      const px = new Pixelit({
+        from: id ? IMGFROMSTRING + id : undefined,
+        to: id ? CANVASTOSTRING + id : undefined,
+        scale: pixelNumber ?? 25,
+      });
 
-    px.draw().pixelate();
-    px.convertPalette(color ? color : "#db3ede");
+      try {
+        await px.draw();
+        await px.pixelate();
+        px.convertPalette(color ? color : "#db3ede");
+      } catch (error) {
+        console.error("Error processing image:", error);
+      }
+    };
+
+    init().catch(console.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
