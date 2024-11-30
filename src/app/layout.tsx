@@ -16,10 +16,15 @@ const triakisFont = localFont({
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <html lang="en" className={triakisFont.className}>
-      <body className="flex min-h-screen flex-col bg-black">{children}</body>
+      <body className="flex min-h-screen flex-col bg-black transition duration-300 ease-in-out">
+        {children}
+        {modal}
+        <div id="modal-root" />
+      </body>
     </html>
   );
 }
