@@ -41,12 +41,13 @@ async function main() {
 
   const cyphepunksAlbum = await db.album.create({
     data: {
+      slug: "cypherpunks-audio-course",
       ContentInfo: {
         create: {
           name: "History of Cypherpunks - Audio Course",
           description: `Discover how in the 90s, a group of hackers who fought against the government using cryptography to defend your right to privacy would lead to the creation of Bitcoin and the Blockchain Revolution.
           A fascinating audio course, exclusive to Platzi, written by me and narrated by Angela Ocando, one of the most influential voices in the crypto community in Latin America.`,
-          slug: "cypherpunks-audio-course",
+
           createdAt: new Date("2022-02-24"),
           imgUrl:
             "https://utfs.io/f/BCMCAtcvwXHD4ERFJqMzOMpEvYhUeSFxBwyR4H7qLDod9mI5",
@@ -194,9 +195,9 @@ async function main() {
         id: id + 1,
         typeContent: "VIDEO",
         difficulty: "LOW",
+        slug: "cypherpunks-audio-" + slug,
         ContentInfo: {
           ...song,
-          slug: "cypherpunks-audio-" + slug,
           createdAt: new Date("2022-02-24"),
           imgUrl: null,
         },

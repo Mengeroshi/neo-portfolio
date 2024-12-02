@@ -7,6 +7,7 @@ CREATE TYPE "Difficulty" AS ENUM ('LOW', 'MEDIUM', 'HARD');
 -- CreateTable
 CREATE TABLE "Album" (
     "id" SERIAL NOT NULL,
+    "slug" TEXT,
     "companyId" INTEGER,
     "contentInfoId" INTEGER NOT NULL,
 
@@ -36,7 +37,6 @@ CREATE TABLE "ContentInfo" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "slug" TEXT NOT NULL,
     "createdAt" TIMESTAMPTZ NOT NULL,
     "imgUrl" TEXT,
     "url" TEXT,
@@ -47,6 +47,7 @@ CREATE TABLE "ContentInfo" (
 -- CreateTable
 CREATE TABLE "Playlist" (
     "id" SERIAL NOT NULL,
+    "slug" TEXT,
     "contentInfoId" INTEGER NOT NULL,
 
     CONSTRAINT "Playlist_pkey" PRIMARY KEY ("id")
@@ -55,6 +56,7 @@ CREATE TABLE "Playlist" (
 -- CreateTable
 CREATE TABLE "Song" (
     "id" SERIAL NOT NULL,
+    "slug" TEXT,
     "typeContent" "ContentType" NOT NULL,
     "difficulty" "Difficulty" NOT NULL DEFAULT 'LOW',
     "albumId" INTEGER,
@@ -89,10 +91,16 @@ CREATE TABLE "_PlaylistToSong" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Album_slug_key" ON "Album"("slug");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Company_slug_key" ON "Company"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "ContentInfo_slug_key" ON "ContentInfo"("slug");
+CREATE UNIQUE INDEX "Playlist_slug_key" ON "Playlist"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Song_slug_key" ON "Song"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_CategoryToAlbum_AB_unique" ON "_CategoryToAlbum"("A", "B");

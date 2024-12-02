@@ -9,27 +9,28 @@ datasource db {
 
 model Album {
   id            Int         @id @default(autoincrement())
+  slug          String     @unique
   companyId     Int?
   contentInfoId Int
   Company       Company?    @relation(fields: [companyId], references: [id])
   ContentInfo   ContentInfo @relation(fields: [contentInfoId], references: [id])
-  Songs          Song[]
-  Categories      Category[]  @relation("CategoryToAlbum")
+  Songs         Song[]
+  Categories    Category[]  @relation("CategoryToAlbum")
 }
 
 model Category {
   id          Int        @id @default(autoincrement())
   name        String
   description String
-  Albums       Album[]    @relation("CategoryToAlbum")
-  Playlists    Playlist[]
-  Songs        Song[]
+  Albums      Album[]    @relation("CategoryToAlbum")
+  Playlists   Playlist[]
+  Songs       Song[]
 }
 
 model Company {
-  id    Int     @id @default(autoincrement())
-  name  String
-  slug  String  @unique
+  id     Int     @id @default(autoincrement())
+  name   String
+  slug   String  @unique
   Albums Album[]
   Songs  Song[]
 }
@@ -38,25 +39,26 @@ model ContentInfo {
   id          Int        @id @default(autoincrement())
   name        String
   description String?
-  slug        String     @unique
   createdAt   DateTime   @db.Timestamptz
   imgUrl      String?
   url         String?
   Albums      Album[]
-  Playlists    Playlist[]
-  Songs        Song[]
+  Playlists   Playlist[]
+  Songs       Song[]
 }
 
 model Playlist {
   id            Int         @id @default(autoincrement())
+  slug          String      @unique
   contentInfoId Int
   ContentInfo   ContentInfo @relation(fields: [contentInfoId], references: [id])
-  Categories      Category[]
-  Songs          Song[]
+  Categories    Category[]
+  Songs         Song[]
 }
 
 model Song {
   id            Int         @id @default(autoincrement())
+  slug          String      @unique
   typeContent   ContentType
   difficulty    Difficulty  @default(LOW)
   albumId       Int?
@@ -65,8 +67,8 @@ model Song {
   Album         Album?      @relation(fields: [albumId], references: [id])
   Company       Company?    @relation(fields: [companyId], references: [id])
   ContentInfo   ContentInfo @relation(fields: [contentInfoId], references: [id])
-  Categories      Category[]
-  Playlists      Playlist[]
+  Categories    Category[]
+  Playlists     Playlist[]
 }
 
 enum ContentType {
