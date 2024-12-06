@@ -1,4 +1,5 @@
 import React from "react";
+import { Label } from "./Label";
 
 type TextInputProps = React.InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
@@ -13,8 +14,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   ...props
 }) => {
   return (
-    <label className="block w-full">
-      <div className="w-fit bg-blue-900 px-2 font-semibold">{label}</div>
+    <Label name={label}>
       {isTextArea ? (
         <textarea
           aria-multiline
@@ -27,6 +27,6 @@ export const TextInput: React.FC<TextInputProps> = ({
           {...props}
         />
       )}
-    </label>
+    </Label>
   );
 };
