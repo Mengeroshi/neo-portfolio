@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import localFont from "next/font/local";
-import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -21,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={triakisFont.className}>
       <body className="flex min-h-screen flex-col bg-black transition duration-300 ease-in-out">
-        {children}
-        {modal}
+        <Providers>
+          {children}
+          {modal}
+        </Providers>
         <div id="modal-root" />
       </body>
     </html>
