@@ -46,7 +46,7 @@ export const UploadImgDropzone = ({
             />
             <CloseIcon
               role="button"
-              className="absolute right-0 top-0 size-7"
+              className="absolute right-0 top-0 size-7 border border-t-0 border-blue-900 hover:bg-blue-900 hover:text-blue-200"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
