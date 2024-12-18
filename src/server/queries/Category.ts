@@ -1,3 +1,4 @@
+import "server-only";
 import { db } from "../db";
 
 export const getCategories = async () => {
@@ -8,3 +9,5 @@ export const getCategories = async () => {
     },
   });
 };
+
+export type TCategories = ReturnType<typeof getCategories>;
