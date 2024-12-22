@@ -15,11 +15,15 @@ export const UploadImgDropzone = ({
   config,
   onDropSuccess,
   onDelete,
+  required,
+  errorMessage,
 }: {
   files: File[];
   config?: ExpandedRouteConfig;
   onDropSuccess: (acceptedFiles: File[]) => void;
   onDelete: () => void;
+  required?: boolean;
+  errorMessage?: string;
 }) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     onDropSuccess(acceptedFiles);
@@ -33,7 +37,7 @@ export const UploadImgDropzone = ({
   });
 
   return (
-    <Label name="image">
+    <Label name="image" required={required} errorMessage={errorMessage}>
       <div className="flex w-full items-center justify-center border border-blue-900 bg-blue-200 text-blue-900">
         {files.length > 0 ? (
           <div className="relative">

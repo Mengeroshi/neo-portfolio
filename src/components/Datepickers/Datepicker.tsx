@@ -13,7 +13,15 @@ const range = (start: number, end: number, step: number) => {
   return output;
 };
 
-export const Datepicker = ({ label }: { label: string }) => {
+export const Datepicker = ({
+  label,
+  required,
+  errorMessage,
+}: {
+  label: string;
+  required?: boolean;
+  errorMessage?: string;
+}) => {
   const [startDate, setStartDate] = useState(new Date());
   const years = range(2018, new Date().getFullYear() + 1, 1);
 
@@ -32,7 +40,7 @@ export const Datepicker = ({ label }: { label: string }) => {
     "December",
   ];
   return (
-    <Label name={label}>
+    <Label name={label} required={required} errorMessage={errorMessage}>
       <ReactDatePicker
         dateFormat="dd-MM-YYYY"
         wrapperClassName="w-full"

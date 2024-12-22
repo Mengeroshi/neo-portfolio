@@ -6,15 +6,17 @@ type TextInputProps = React.InputHTMLAttributes<
 > & {
   label: string;
   isTextArea?: boolean;
+  errorMessage?: string;
 };
 
 export const TextInput: React.FC<TextInputProps> = ({
   label,
   isTextArea = false,
+  errorMessage,
   ...props
 }) => {
   return (
-    <Label name={label}>
+    <Label name={label} required={props.required} errorMessage={errorMessage}>
       {isTextArea ? (
         <textarea
           aria-multiline
