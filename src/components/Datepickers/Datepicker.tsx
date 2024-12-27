@@ -14,11 +14,13 @@ const range = (start: number, end: number, step: number) => {
 };
 
 export const Datepicker = ({
+  onChange,
   label,
   required,
   errorMessage,
 }: {
   label: string;
+  onChange: (date: Date) => void;
   required?: boolean;
   errorMessage?: string;
 }) => {
@@ -78,6 +80,7 @@ export const Datepicker = ({
         selected={startDate}
         onChange={(date) => {
           if (date) {
+            onChange(date);
             setStartDate(date);
           }
         }}
