@@ -8,7 +8,7 @@ export const createAlbum = async (data: TAddAlbumFormSchema) => {
   if (image !== null) {
     const utResponse = (await utapi.uploadFiles([image]))[0];
 
-    if (utResponse?.error === null) {
+    if (utResponse && utResponse.error === null) {
       await db.album.create({
         data: {
           slug,
@@ -28,6 +28,10 @@ export const createAlbum = async (data: TAddAlbumFormSchema) => {
           },
         },
       });
+    } else {
+      throw new Error(utResponse?.error?.message ?? "Unknown error");
     }
+  } else {
+    throw new Error("Image is required");
   }
 };
