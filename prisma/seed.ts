@@ -29,6 +29,8 @@ async function main() {
     "Platzi",
     "Cointelegraph",
     "Inst Mises Mexico",
+    "Xpectre Labs",
+    "Bolsa para principiantes",
   ].map((name) => ({
     name,
     slug: name.toLowerCase().replace(" ", "-"),
