@@ -1,3 +1,4 @@
+"use server";
 import { type TAddAlbumFormSchema } from "@/types/Album";
 import { utapi } from "../uploadthing";
 import { db } from "../db";
@@ -6,10 +7,11 @@ export const createAlbum = async (data: TAddAlbumFormSchema) => {
   const { image, slug, categories, company, ...contentInfo } = data;
 
   if (image !== null) {
-    const utResponse = (await utapi.uploadFiles([image]))[0];
+    const updatedImage = new File([image], slug, { type: image.type });
+    const utResponse = (await utapi.uploadFiles([updatedImage]))[0];
 
     if (utResponse && utResponse.error === null) {
-      await db.album.create({
+      const newAlbum = await db.album.create({
         data: {
           slug,
           ContentInfo: {
@@ -28,8 +30,12 @@ export const createAlbum = async (data: TAddAlbumFormSchema) => {
           },
         },
       });
+      return {
+        ...newAlbum,
+        name: contentInfo.name,
+      };
     } else {
-      throw new Error(utResponse?.error?.message ?? "Unknown error");
+      throw new Error(utResponse?.error?.message ?? "Unknown error", {});
     }
   } else {
     throw new Error("Image is required");
