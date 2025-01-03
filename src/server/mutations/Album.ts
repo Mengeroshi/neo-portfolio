@@ -1,9 +1,9 @@
 "use server";
-import { type TAddAlbumFormSchema } from "@/types/Album";
+import { type TCreateAlbumFormSchema } from "@/types/Album";
 import { utapi } from "../uploadthing";
 import { db } from "../db";
 
-export const createAlbum = async (data: TAddAlbumFormSchema) => {
+export const createAlbum = async (data: TCreateAlbumFormSchema) => {
   const { image, slug, categories, company, ...contentInfo } = data;
 
   if (image !== null) {

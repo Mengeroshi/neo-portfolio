@@ -7,7 +7,7 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
-export const addAlbumFormSchema = z
+export const createAlbumFormSchema = z
   .object({
     name: z.string({
       required_error: "Name is required",
@@ -52,4 +52,4 @@ export const addAlbumFormSchema = z
     message: "Image is required",
     path: ["image"],
   });
-export type TAddAlbumFormSchema = z.infer<typeof addAlbumFormSchema>;
+export type TCreateAlbumFormSchema = z.infer<typeof createAlbumFormSchema>;
