@@ -7,7 +7,7 @@ export const AlbumsSection = async () => {
   return (
     <section className="flex flex-col">
       <h2 className="text-xl font-bold text-white">Albums</h2>
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4">
         {albums.map((album) => (
           <AlbumCase key={album.id} {...album.ContentInfo} />
         ))}

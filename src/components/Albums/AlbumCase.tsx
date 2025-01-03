@@ -21,7 +21,7 @@ export const AlbumCase = ({
         pixelNumber={45}
         width={215}
         height={215}
-        className="!w-full"
+        className="h-[215px] w-[215px]"
       />
 
       <figcaption className="mt-1 text-xl leading-none text-[#3ECFDE]">
