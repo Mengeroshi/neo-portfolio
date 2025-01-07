@@ -20,6 +20,8 @@ import {
 } from "@/types/Album";
 import { onCreateAlbumAction } from "@/server/actions/Album";
 import { useServerAction } from "zsa-react";
+import { toast } from "sonner";
+import { ConfettiIcon, ErrorOutlineIcon } from "@sanity/icons";
 
 const getErrorMessage = (
   errors: FieldErrors<FieldValues>,
@@ -58,17 +60,26 @@ export const CreateAlbumForm = () => {
       onSubmit={async (e) => {
         e.preventDefault();
         await handleSubmit(async (data) => {
-          const [response, err] = await execute(data);
-          if (err) {
-            if (err.name === "ZodError") {
-              Object.entries(err.fieldErrors ?? {}).forEach(([key, value]) => {
-                setError(key as keyof TCreateAlbumFormSchema, {
-                  type: "manual",
-                  message: value[0],
-                });
-              });
+          const [response, error] = await execute(data);
+          if (error) {
+            toast.error(error.message, {
+              icon: <ErrorOutlineIcon className="size-5" />,
+            });
+
+            if (error.name === "ZodError") {
+              Object.entries(error.fieldErrors ?? {}).forEach(
+                ([key, value]) => {
+                  setError(key as keyof TCreateAlbumFormSchema, {
+                    type: "manual",
+                    message: value[0],
+                  });
+                },
+              );
             }
           } else {
+            toast.success(`Album "${response.name} created"`, {
+              icon: <ConfettiIcon className="size-5" />,
+            });
             reset();
           }
         })(e);
