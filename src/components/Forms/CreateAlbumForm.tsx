@@ -3,7 +3,7 @@ import { TextInput } from "./TextInput";
 import { Select } from "../Selects/Select";
 import { Datepicker } from "../Datepickers/Datepicker";
 import { UploadImgDropzone } from "../Images/UploadImgDropzone";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { categoriesOptions, companiesOptions } from "@/tanstack";
 import { Button } from "../Buttons/Button";
@@ -37,6 +37,26 @@ export const CreateAlbumForm = () => {
   const { data: categories } = useSuspenseQuery(categoriesOptions);
   const formRef = useRef<HTMLFormElement>(null);
 
+  const companiesObj = useMemo(() => {
+    return companies?.reduce(
+      (acc: Record<number, (typeof companies)[0]>, company) => {
+        acc[company.id] = company;
+        return acc;
+      },
+      {},
+    );
+  }, [companies]);
+
+  const categoriesObj = useMemo(() => {
+    return categories?.reduce(
+      (acc: Record<number, (typeof categories)[0]>, category) => {
+        acc[category.id] = category;
+        return acc;
+      },
+      {},
+    );
+  }, [categories]);
+
   const { isPending, execute } = useServerAction(onCreateAlbumAction);
   const {
     register,
@@ -54,7 +74,27 @@ export const CreateAlbumForm = () => {
     },
   });
 
-  const [createdAt, image] = watch(["createdAt", "image"]);
+  const [createdAt, image, company, categoriesSelected] = watch([
+    "createdAt",
+    "image",
+    "company",
+    "categories",
+  ]);
+
+  const companySelectedValue = useMemo(() => {
+    return companiesObj[company] ? [companiesObj[company]] : [];
+  }, [company, companiesObj]);
+
+  const categoriesSelectedValue = useMemo(() => {
+    return categoriesSelected
+      ? categoriesSelected
+          .map((category) => categoriesObj[category])
+          .filter(
+            (category): category is NonNullable<typeof category> =>
+              category !== undefined,
+          )
+      : [];
+  }, [categoriesSelected, categoriesObj]);
 
   return (
     <form
@@ -136,6 +176,7 @@ export const CreateAlbumForm = () => {
         errorMessage={getErrorMessage(errors, "url")}
       />
       <Select
+        values={companySelectedValue}
         required
         label="company"
         placeholder=""
@@ -150,6 +191,7 @@ export const CreateAlbumForm = () => {
         errorMessage={getErrorMessage(errors, "company")}
       />
       <Select
+        values={categoriesSelectedValue}
         required
         label="categories"
         placeholder=""

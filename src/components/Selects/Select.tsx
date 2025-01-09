@@ -14,6 +14,7 @@ export const Select = <T extends TOption>({
   onChange,
   required,
   errorMessage,
+  values,
 }: {
   label: string;
   placeholder?: string;
@@ -24,6 +25,7 @@ export const Select = <T extends TOption>({
   onChange: (value: T[]) => void;
   required?: boolean;
   errorMessage?: string;
+  values?: T[];
 }) => {
   return (
     <Label name={label} required={required} errorMessage={errorMessage}>
@@ -34,7 +36,7 @@ export const Select = <T extends TOption>({
         options={options}
         labelField={labelField}
         valueField={valueField}
-        values={[]}
+        values={values ?? []}
         onChange={onChange}
       />
     </Label>
