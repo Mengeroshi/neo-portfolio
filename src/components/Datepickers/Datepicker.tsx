@@ -18,15 +18,16 @@ export const Datepicker = ({
   label,
   required,
   errorMessage,
+  date,
 }: {
   label: string;
   onChange: (date: Date) => void;
   required?: boolean;
   errorMessage?: string;
+  date?: Date;
 }) => {
   const [startDate, setStartDate] = useState(new Date());
   const years = range(2018, new Date().getFullYear() + 1, 1);
-
   const months = [
     "January",
     "February",
@@ -77,7 +78,7 @@ export const Datepicker = ({
             </select>
           </div>
         )}
-        selected={startDate}
+        selected={date ?? startDate}
         onChange={(date) => {
           if (date) {
             onChange(date);

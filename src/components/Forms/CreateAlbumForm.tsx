@@ -3,7 +3,7 @@ import { TextInput } from "./TextInput";
 import { Select } from "../Selects/Select";
 import { Datepicker } from "../Datepickers/Datepicker";
 import { UploadImgDropzone } from "../Images/UploadImgDropzone";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { categoriesOptions, companiesOptions } from "@/tanstack";
 import { Button } from "../Buttons/Button";
@@ -45,6 +45,7 @@ export const CreateAlbumForm = () => {
     setValue,
     setError,
     reset,
+    watch,
   } = useForm<TCreateAlbumFormSchema>({
     resolver: zodResolver(createAlbumFormSchema),
     defaultValues: {
@@ -52,7 +53,8 @@ export const CreateAlbumForm = () => {
       image: null,
     },
   });
-  const [image, setImage] = useState<File | null>(null);
+
+  const [createdAt, image] = watch(["createdAt", "image"]);
 
   return (
     <form
@@ -114,12 +116,10 @@ export const CreateAlbumForm = () => {
         onDropSuccess={(files) => {
           if (files[0]) {
             setValue("image", files[0]);
-            setImage(files[0]);
           }
         }}
         onDelete={() => {
           setValue("image", null);
-          setImage(null);
         }}
         errorMessage={getErrorMessage(errors, "image")}
       />
@@ -166,6 +166,7 @@ export const CreateAlbumForm = () => {
         errorMessage={getErrorMessage(errors, "categories")}
       />
       <Datepicker
+        date={createdAt}
         label="created At"
         required
         onChange={(date) => {
