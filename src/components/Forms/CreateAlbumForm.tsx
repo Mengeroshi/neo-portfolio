@@ -99,33 +99,28 @@ export const CreateAlbumForm = () => {
   return (
     <form
       ref={formRef}
-      onSubmit={async (e) => {
-        e.preventDefault();
-        await handleSubmit(async (data) => {
-          const [response, error] = await execute(data);
-          if (error) {
-            toast.error(error.message, {
-              icon: <ErrorOutlineIcon className="size-5" />,
-            });
+      onSubmit={handleSubmit(async (data) => {
+        const [response, error] = await execute(data);
+        if (error) {
+          toast.error(error.message, {
+            icon: <ErrorOutlineIcon className="size-5" />,
+          });
 
-            if (error.name === "ZodError") {
-              Object.entries(error.fieldErrors ?? {}).forEach(
-                ([key, value]) => {
-                  setError(key as keyof TCreateAlbumFormSchema, {
-                    type: "manual",
-                    message: value[0],
-                  });
-                },
-              );
-            }
-          } else {
-            toast.success(`Album "${response.name} created"`, {
-              icon: <ConfettiIcon className="size-5" />,
+          if (error.name === "ZodError") {
+            Object.entries(error.fieldErrors ?? {}).forEach(([key, value]) => {
+              setError(key as keyof TCreateAlbumFormSchema, {
+                type: "manual",
+                message: value[0],
+              });
             });
-            reset();
           }
-        })(e);
-      }}
+        } else {
+          toast.success(`Album "${response.name} created"`, {
+            icon: <ConfettiIcon className="size-5" />,
+          });
+          reset();
+        }
+      })}
       style={{ scrollbarGutter: "stable !important" }}
       className="scrollbar-thumb-rounded-none flex w-[50vw] flex-col gap-4 overflow-auto scrollbar scrollbar-track-blue-200/[.40] scrollbar-thumb-blue-900/[.40]"
     >
