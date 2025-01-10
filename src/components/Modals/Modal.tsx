@@ -7,7 +7,6 @@ import ReactDOM from "react-dom";
 
 export const Modal = ({
   children,
-  title,
 }: {
   children: React.ReactNode;
   className?: string;
@@ -40,16 +39,15 @@ export const Modal = ({
       onClick={onDismiss}
     >
       <article
-        className="relative flex max-h-screen flex-col border border-[#3ECFDE] bg-black p-8"
+        className="relative flex max-h-screen flex-col bg-black"
         onClick={(event) => {
           event.stopPropagation();
         }}
       >
-        {title && <h1 className="mb-4 text-4xl text-blue-900">{title}</h1>}
         {children}
         <button
           onClick={onDismiss}
-          className="absolute right-0 top-0 h-fit w-fit border border-r-0 border-t-0 border-blue-900 p-0.5"
+          className="absolute right-0 top-0 h-fit w-fit border border-blue-900 p-0.5"
         >
           <CloseIcon className="size-7 text-[#3ECFDE]" />
         </button>

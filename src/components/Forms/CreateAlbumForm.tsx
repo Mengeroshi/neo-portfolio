@@ -122,8 +122,9 @@ export const CreateAlbumForm = () => {
         }
       })}
       style={{ scrollbarGutter: "stable !important" }}
-      className="scrollbar-thumb-rounded-none flex w-[50vw] flex-col gap-4 overflow-auto scrollbar scrollbar-track-blue-200/[.40] scrollbar-thumb-blue-900/[.40]"
+      className="scrollbar-thumb-rounded-none flex w-[50vw] flex-col gap-4 overflow-auto border border-blue-900 p-8 scrollbar scrollbar-track-blue-200/[.40] scrollbar-thumb-blue-900/[.40]"
     >
+      <h1 className="text-4xl text-blue-900">Create Album</h1>
       <TextInput
         required
         label="name"
