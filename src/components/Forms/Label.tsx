@@ -11,7 +11,7 @@ export const Label = ({
 }) => {
   return (
     <label className="block w-full">
-      <div className="w-fit bg-blue-900 px-2 font-semibold">
+      <div className="w-fit bg-blue-900 px-2 font-semibold text-blue-200">
         {name} {required && "*"}
       </div>
       {children}
