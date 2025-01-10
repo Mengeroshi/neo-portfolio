@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  min-height: 100vh;
+}
+
 .react-datepicker__day--selected.react-datepicker__day,
 .react-datepicker__day:hover {
   @apply rounded-none bg-blue-900 text-blue-200 !important;
