@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import localFont from "next/font/local";
 import { type Metadata } from "next";
 import Providers from "./providers";
+import { CustomToaster } from "@/components/Toasters/CustomToaster";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -26,6 +27,7 @@ export default function RootLayout({
           {modal}
         </Providers>
         <div id="modal-root" />
+        <CustomToaster />
       </body>
     </html>
   );
