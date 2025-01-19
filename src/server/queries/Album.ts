@@ -6,6 +6,7 @@ export const getAlbumsCases = async () => {
   return await db.album.findMany({
     select: {
       id: true,
+      slug: true,
       ContentInfo: {
         select: {
           name: true,
