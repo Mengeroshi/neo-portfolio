@@ -21,13 +21,14 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <html lang="en" className={triakisFont.className}>
-      <body className="flex min-h-screen flex-col bg-black transition duration-300 ease-in-out">
+      <body className="relative flex min-h-screen flex-col border border-blue-900/60 bg-[#04070F] transition duration-300 ease-in-out">
         <Providers>
           {children}
           {modal}
         </Providers>
         <div id="modal-root" />
         <CustomToaster />
+        <div className="fixed bottom-0 left-0 right-0 -z-10 aspect-square h-[25vh] w-full border bg-[#3ECFDE]/20 opacity-30 blur-[300px]" />
       </body>
     </html>
   );
