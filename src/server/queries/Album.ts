@@ -30,17 +30,25 @@ export const getAlbumBySlug = async (slug: string) => {
           name: true,
           createdAt: true,
           imgUrl: true,
+          description: true,
+          url: true,
         },
       },
       Songs: {
+        orderBy: {
+          id: "asc",
+        },
         select: {
           id: true,
+          typeContent: true,
+          difficulty: true,
           ContentInfo: {
             select: {
               name: true,
               description: true,
               createdAt: true,
               imgUrl: true,
+              url: true,
             },
           },
         },
