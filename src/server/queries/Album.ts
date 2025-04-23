@@ -53,6 +53,17 @@ export const getAlbumBySlug = async (slug: string) => {
           },
         },
       },
+      Categories: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      Company: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 };
