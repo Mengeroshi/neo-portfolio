@@ -67,3 +67,7 @@ export const getAlbumBySlug = async (slug: string) => {
     },
   });
 };
+
+export type TAlbumBySlug = NonNullable<
+  Awaited<ReturnType<typeof getAlbumBySlug>>
+>;

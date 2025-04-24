@@ -7,14 +7,16 @@ import {
   useReactTable,
   createColumnHelper,
 } from "@tanstack/react-table";
-import { type TTSongTable } from "@/app/album/[slug]/page";
 import { ContentTypeIcon } from "../icons/ContentTypeIcon";
 import { DifficultyIcon } from "../icons/DifficultyIcon";
 import Link from "next/link";
 import { LaunchIcon } from "@sanity/icons";
+import { type TAlbumBySlug } from "@/server/queries/Album";
+
+export type TAlbumSongs = Pick<TAlbumBySlug, "Songs">["Songs"];
 
 const columnHelper = createColumnHelper<
-  TTSongTable[number] & { number: number }
+  TAlbumSongs[number] & { number: number }
 >();
 
 const columns = [
@@ -63,7 +65,7 @@ const columns = [
   }),
 ];
 
-export const SongsTable = ({ songs }: { songs: TTSongTable }) => {
+export const SongsTable = ({ songs }: { songs: TAlbumSongs }) => {
   const table = useReactTable({
     data: songs.map((song, i) => ({ ...song, number: i + 1 })),
     columns,
@@ -89,7 +91,7 @@ export const SongsTable = ({ songs }: { songs: TTSongTable }) => {
                   key={header.id}
                   colSpan={header.colSpan}
                   style={{ position: "relative", width: header.getSize() }}
-                  className="border-b border-blue-900/60 font-light tracking-wider"
+                  className="border-b border-blue-900/60 bg-blue-200 text-sm font-light tracking-wider"
                 >
                   {header.isPlaceholder
                     ? null
