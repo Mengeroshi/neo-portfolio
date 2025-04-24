@@ -18,6 +18,10 @@ export const getAlbumsCases = async () => {
   });
 };
 
+export type TAlbumCases = NonNullable<
+  Awaited<ReturnType<typeof getAlbumsCases>>[0]
+>;
+
 export const getAlbumBySlug = async (slug: string) => {
   return await db.album.findUnique({
     where: {

@@ -1,18 +1,13 @@
 import { IMGURLPLACEHOLDER } from "@/constants";
 import { PixeledImg } from "../Images/PixeledImg";
 import Link from "next/link";
+import { type TAlbumCases } from "@/server/queries/Album";
 
-export const AlbumCase = ({
-  imgUrl,
-  name,
-  createdAt,
-  slug,
-}: {
-  imgUrl: string | null;
-  name: string;
-  createdAt: Date;
+type TAlbumCase = Pick<TAlbumCases, "ContentInfo">["ContentInfo"] & {
   slug: string;
-}) => {
+};
+
+export const AlbumCase = ({ imgUrl, name, createdAt, slug }: TAlbumCase) => {
   const year = new Date(createdAt).getFullYear();
 
   return (
