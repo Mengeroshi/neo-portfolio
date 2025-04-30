@@ -1,4 +1,5 @@
 import { Badge } from "@/components/Badges/Badge";
+import { Button } from "@/components/Buttons/Button";
 import { LabelWithUnderLine } from "@/components/Forms/LabelWithUnderline";
 import { PixeledImg } from "@/components/Images/PixeledImg";
 import { SongsTable } from "@/components/Tables/SongsTable";
@@ -109,6 +110,13 @@ export default async function Page({
         </div>
       </header>
       <SongsTable songs={album.Songs} />
+      <Button
+        className="!border-x-0 !border-t-0"
+        variant="secondary"
+        text="Add Song"
+        fullWidth
+        href={`/album/${slug}/createSong?companyId=${Company?.id}`}
+      />
     </div>
   );
 }
