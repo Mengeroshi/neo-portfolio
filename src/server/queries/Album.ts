@@ -66,6 +66,7 @@ export const getAlbumBySlug = async (slug: string) => {
       Company: {
         select: {
           name: true,
+          id: true,
         },
       },
     },
