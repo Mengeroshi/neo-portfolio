@@ -7,7 +7,7 @@ CREATE TYPE "Difficulty" AS ENUM ('LOW', 'MEDIUM', 'HARD');
 -- CreateTable
 CREATE TABLE "Album" (
     "id" SERIAL NOT NULL,
-    "slug" TEXT,
+    "slug" TEXT NOT NULL,
     "companyId" INTEGER,
     "contentInfoId" INTEGER NOT NULL,
 
@@ -47,7 +47,7 @@ CREATE TABLE "ContentInfo" (
 -- CreateTable
 CREATE TABLE "Playlist" (
     "id" SERIAL NOT NULL,
-    "slug" TEXT,
+    "slug" TEXT NOT NULL,
     "contentInfoId" INTEGER NOT NULL,
 
     CONSTRAINT "Playlist_pkey" PRIMARY KEY ("id")
@@ -56,7 +56,7 @@ CREATE TABLE "Playlist" (
 -- CreateTable
 CREATE TABLE "Song" (
     "id" SERIAL NOT NULL,
-    "slug" TEXT,
+    "slug" TEXT NOT NULL,
     "typeContent" "ContentType" NOT NULL,
     "difficulty" "Difficulty" NOT NULL DEFAULT 'LOW',
     "albumId" INTEGER,
