@@ -11,7 +11,7 @@ export default async function AddAlbumModalPage() {
   void queryClient.prefetchQuery(companiesOptions);
   void queryClient.prefetchQuery(categoriesOptions);
   return (
-    <Modal title="Create Album">
+    <Modal>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CreateAlbumForm />
       </HydrationBoundary>

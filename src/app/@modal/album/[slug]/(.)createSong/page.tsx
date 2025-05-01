@@ -9,7 +9,7 @@ export default async function AddSongModalPage() {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(categoriesOptions);
   return (
-    <Modal title="Create Song">
+    <Modal>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <AddSongForm />
       </HydrationBoundary>
