@@ -6,29 +6,18 @@ import { useMemo, useRef } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { categoriesOptions } from "@/tanstack";
 import { Button } from "../Buttons/Button";
-import {
-  type FieldError,
-  type FieldErrors,
-  type FieldValues,
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { ConfettiIcon, ErrorOutlineIcon } from "@sanity/icons";
 import { createSongFormSchema, type TCreateSongFormSchema } from "@/types/Song";
 import { onCreateSongAction } from "@/server/actions/Song";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { ContentType, Difficulty } from "@prisma/client";
+import { getErrorMessage, handleExecuteSubmit } from "@/utils/form";
+import { Form } from "./Form";
 
-const getErrorMessage = (
-  errors: FieldErrors<FieldValues>,
-  fieldName: string,
-) => {
-  return typeof errors[fieldName]?.message === "string"
-    ? (errors[fieldName] as FieldError).message
-    : undefined;
-};
 const difficultyLevels = Object.values(Difficulty).map((difficulty) => ({
   name: difficulty,
   slug: difficulty,
@@ -39,6 +28,7 @@ const typeContentOptions = Object.values(ContentType).map((contentType) => ({
 }));
 
 export const AddSongForm = () => {
+  const router = useRouter();
   const { slug } = useParams();
   const searchParam = useSearchParams();
   const companyId = searchParam.get("companyId");
@@ -107,119 +97,118 @@ export const AddSongForm = () => {
     return option ? [option] : [];
   }, [typeContent]);
 
+  const execSubmit = handleSubmit(async (data) => {
+    const [response, error] = await execute(data);
+
+    handleExecuteSubmit<typeof createSongFormSchema, typeof response>(
+      error,
+      (message) => {
+        toast.error(message, {
+          icon: <ErrorOutlineIcon className="size-5" />,
+        });
+      },
+      (name, error) => {
+        setError(name as keyof TCreateSongFormSchema, error);
+      },
+      response,
+      (response) => {
+        toast.success(`Song "${response.name} created"`, {
+          icon: <ConfettiIcon className="size-5" />,
+        });
+        reset();
+        router.back();
+      },
+    );
+  });
+
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit(async (data) => {
-        const [response, error] = await execute(data);
-        if (error) {
-          console.log(error);
-          toast.error(error.message, {
-            icon: <ErrorOutlineIcon className="size-5" />,
-          });
+    <Form ref={formRef} onSubmit={execSubmit}>
+      <>
+        <h1 className="text-4xl text-blue-900">Create Song</h1>
+        <TextInput
+          required
+          label="name"
+          {...register("name")}
+          errorMessage={getErrorMessage(errors, "name")}
+        />
+        <TextInput
+          required
+          isTextArea
+          label="description"
+          {...register("description")}
+          errorMessage={getErrorMessage(errors, "description")}
+        />
+        <TextInput
+          label="url"
+          {...register("url")}
+          errorMessage={getErrorMessage(errors, "url")}
+        />
+        <Datepicker
+          date={createdAt}
+          label="created At"
+          required
+          onChange={(date) => {
+            setValue("createdAt", date);
+          }}
+          errorMessage={getErrorMessage(errors, "createdAt")}
+        />
+        <TextInput
+          label="slug"
+          {...register("slug")}
+          required
+          errorMessage={getErrorMessage(errors, "slug")}
+        />
+        <Select
+          values={difficultySelectedValue}
+          required
+          label="difficulty"
+          placeholder=""
+          options={difficultyLevels}
+          labelField="name"
+          valueField="slug"
+          onChange={(values) => {
+            if (values[0]) {
+              setValue("difficulty", values[0].name);
+            }
+          }}
+          errorMessage={getErrorMessage(errors, "difficulty")}
+        />
+        <Select
+          values={typeContentSelectedValue}
+          required
+          label="Content Type"
+          placeholder=""
+          options={typeContentOptions}
+          labelField="name"
+          valueField="slug"
+          onChange={(values) => {
+            if (values[0]) {
+              setValue("typeContent", values[0].name);
+            }
+          }}
+          errorMessage={getErrorMessage(errors, "difficulty")}
+        />
 
-          if (error.name === "ZodError") {
-            Object.entries(error.fieldErrors ?? {}).forEach(([key, value]) => {
-              setError(key as keyof TCreateSongFormSchema, {
-                type: "manual",
-                message: value[0],
-              });
-            });
-          }
-        } else {
-          toast.success(`Album "${response.name} created"`, {
-            icon: <ConfettiIcon className="size-5" />,
-          });
-          reset();
-        }
-      })}
-      style={{ scrollbarGutter: "stable !important" }}
-      className="scrollbar-thumb-rounded-none flex w-[50vw] flex-col gap-4 overflow-auto border border-blue-900 p-8 scrollbar scrollbar-track-blue-200/[.40] scrollbar-thumb-blue-900/[.40]"
-    >
-      <h1 className="text-4xl text-blue-900">Create Song</h1>
-      <TextInput
-        required
-        label="name"
-        {...register("name")}
-        errorMessage={getErrorMessage(errors, "name")}
-      />
-      <TextInput
-        required
-        isTextArea
-        label="description"
-        {...register("description")}
-        errorMessage={getErrorMessage(errors, "description")}
-      />
-      <TextInput
-        label="url"
-        {...register("url")}
-        errorMessage={getErrorMessage(errors, "url")}
-      />
-      <Datepicker
-        date={createdAt}
-        label="created At"
-        required
-        onChange={(date) => {
-          setValue("createdAt", date);
-        }}
-        errorMessage={getErrorMessage(errors, "createdAt")}
-      />
-      <TextInput
-        label="slug"
-        {...register("slug")}
-        required
-        errorMessage={getErrorMessage(errors, "slug")}
-      />
-      <Select
-        values={difficultySelectedValue}
-        required
-        label="difficulty"
-        placeholder=""
-        options={difficultyLevels}
-        labelField="name"
-        valueField="slug"
-        onChange={(values) => {
-          if (values[0]) {
-            setValue("difficulty", values[0].name);
-          }
-        }}
-        errorMessage={getErrorMessage(errors, "difficulty")}
-      />
-      <Select
-        values={typeContentSelectedValue}
-        required
-        label="Content Type"
-        placeholder=""
-        options={typeContentOptions}
-        labelField="name"
-        valueField="slug"
-        onChange={(values) => {
-          if (values[0]) {
-            setValue("typeContent", values[0].name);
-          }
-        }}
-        errorMessage={getErrorMessage(errors, "difficulty")}
-      />
+        <Select
+          values={categoriesSelectedValue}
+          required
+          label="categories"
+          placeholder=""
+          isMulti
+          options={categories}
+          labelField="name"
+          valueField="id"
+          onChange={(values) => {
+            setValue(
+              "categories",
+              values.map((v) => v.id),
+            );
+          }}
+          errorMessage={getErrorMessage(errors, "categories")}
+        />
 
-      <Select
-        values={categoriesSelectedValue}
-        required
-        label="categories"
-        placeholder=""
-        isMulti
-        options={categories}
-        labelField="name"
-        valueField="id"
-        onChange={(values) => {
-          setValue(
-            "categories",
-            values.map((v) => v.id),
-          );
-        }}
-        errorMessage={getErrorMessage(errors, "categories")}
-      />
-
-      <Button text="Submit" type="submit" fullWidth disabled={isPending} />
-    </form>
+        <Button text="Submit" type="submit" fullWidth disabled={isPending} />
+      </>
+    </Form>
   );
 };

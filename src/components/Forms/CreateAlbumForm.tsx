@@ -7,12 +7,7 @@ import { useMemo, useRef } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { categoriesOptions, companiesOptions } from "@/tanstack";
 import { Button } from "../Buttons/Button";
-import {
-  type FieldError,
-  type FieldErrors,
-  type FieldValues,
-  useForm,
-} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createAlbumFormSchema,
@@ -22,17 +17,12 @@ import { onCreateAlbumAction } from "@/server/actions/Album";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { ConfettiIcon, ErrorOutlineIcon } from "@sanity/icons";
-
-const getErrorMessage = (
-  errors: FieldErrors<FieldValues>,
-  fieldName: string,
-) => {
-  return typeof errors[fieldName]?.message === "string"
-    ? (errors[fieldName] as FieldError).message
-    : undefined;
-};
+import { getErrorMessage, handleExecuteSubmit } from "@/utils/form";
+import { Form } from "./Form";
+import { useRouter } from "next/navigation";
 
 export const CreateAlbumForm = () => {
+  const router = useRouter();
   const { data: companies } = useSuspenseQuery(companiesOptions);
   const { data: categories } = useSuspenseQuery(categoriesOptions);
   const formRef = useRef<HTMLFormElement>(null);
@@ -96,34 +86,32 @@ export const CreateAlbumForm = () => {
       : [];
   }, [categoriesSelected, categoriesObj]);
 
-  return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit(async (data) => {
-        const [response, error] = await execute(data);
-        if (error) {
-          toast.error(error.message, {
-            icon: <ErrorOutlineIcon className="size-5" />,
-          });
+  const executeSubmit = handleSubmit(async (data) => {
+    const [response, error] = await execute(data);
 
-          if (error.name === "ZodError") {
-            Object.entries(error.fieldErrors ?? {}).forEach(([key, value]) => {
-              setError(key as keyof TCreateAlbumFormSchema, {
-                type: "manual",
-                message: value[0],
-              });
-            });
-          }
-        } else {
-          toast.success(`Album "${response.name} created"`, {
-            icon: <ConfettiIcon className="size-5" />,
-          });
-          reset();
-        }
-      })}
-      style={{ scrollbarGutter: "stable !important" }}
-      className="scrollbar-thumb-rounded-none flex w-[50vw] flex-col gap-4 overflow-auto border border-blue-900 p-8 scrollbar scrollbar-track-blue-200/[.40] scrollbar-thumb-blue-900/[.40]"
-    >
+    handleExecuteSubmit<typeof createAlbumFormSchema, typeof response>(
+      error,
+      (message) => {
+        toast.error(message, {
+          icon: <ErrorOutlineIcon className="size-5" />,
+        });
+      },
+      (name, error) => {
+        setError(name as keyof TCreateAlbumFormSchema, error);
+      },
+      response,
+      (response) => {
+        toast.success(`Album "${response.name} created"`, {
+          icon: <ConfettiIcon className="size-5" />,
+        });
+        reset();
+        router.back();
+      },
+    );
+  });
+
+  return (
+    <Form ref={formRef} onSubmit={executeSubmit}>
       <h1 className="text-4xl text-blue-900">Create Album</h1>
       <TextInput
         required
@@ -213,6 +201,6 @@ export const CreateAlbumForm = () => {
         errorMessage={getErrorMessage(errors, "createdAt")}
       />
       <Button text="Submit" type="submit" fullWidth disabled={isPending} />
-    </form>
+    </Form>
   );
 };
