@@ -10,14 +10,69 @@ import {
 import { ContentTypeIcon } from "../icons/ContentTypeIcon";
 import { DifficultyIcon } from "../icons/DifficultyIcon";
 import Link from "next/link";
-import { LaunchIcon } from "@sanity/icons";
+import {
+  EditIcon,
+  EllipsisHorizontalIcon,
+  LaunchIcon,
+  TrashIcon,
+} from "@sanity/icons";
 import { type TAlbumBySlug } from "@/server/queries/Album";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuTrigger,
+} from "../Dropdowns/Dropdown";
+import { usePathname, useRouter } from "next/navigation";
 
 export type TAlbumSongs = Pick<TAlbumBySlug, "Songs">["Songs"];
 
 const columnHelper = createColumnHelper<
   TAlbumSongs[number] & { number: number }
 >();
+
+const ActionsDropdown = ({ id }: { id: number }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  return (
+    <div className="flex items-center justify-center">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild className="outline-none">
+          <button
+            className="items-center justify-center"
+            aria-label="songs table actions"
+          >
+            <EllipsisHorizontalIcon className="size-8" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuContent sideOffset={-2} className="tracking-wide">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => {
+                router.push(`${pathname}/edit?id=${id}`);
+              }}
+            >
+              <EditIcon />
+              Update
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="data-[highlighted]:bg-red-900/40 data-[disabled]:text-red-900/20 data-[highlighted]:text-red-200"
+              onClick={() => {
+                router.push(`?delete=${id}`);
+              }}
+            >
+              <TrashIcon /> Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenuPortal>
+      </DropdownMenu>
+    </div>
+  );
+};
 
 const columns = [
   columnHelper.accessor("number", {
@@ -41,7 +96,6 @@ const columns = [
     ),
     minSize: 300,
   }),
-
   columnHelper.accessor("typeContent", {
     header: "Content Type",
     cell: (info) => {
@@ -63,6 +117,14 @@ const columns = [
       </div>
     ),
   }),
+  {
+    accessorKey: "actions",
+    id: "actions",
+    header: "Actions",
+    cell: (info: { row: { original: { id: number } } }) => (
+      <ActionsDropdown id={info.row.original.id} />
+    ),
+  },
 ];
 
 export const SongsTable = ({ songs }: { songs: TAlbumSongs }) => {
@@ -72,9 +134,8 @@ export const SongsTable = ({ songs }: { songs: TAlbumSongs }) => {
     enableColumnResizing: true,
     columnResizeMode: "onChange",
     getCoreRowModel: getCoreRowModel(),
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
+    autoResetPageIndex: false,
+    autoResetExpanded: false,
   });
 
   return (
