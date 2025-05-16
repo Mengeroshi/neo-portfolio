@@ -3,11 +3,11 @@ import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 const buttonStyles = cva(
-  "flex h-fit shrink-0 items-center justify-center gap-2 font-semibold text-lg leading-[100%] ",
+  "flex h-fit shrink-0 items-center justify-center gap-2 font-semibold text-lg leading-[100%] tracking-wider ",
   {
     variants: {
       variant: {
-        primary: "bg-blue-900  text-blue-200",
+        primary: "bg-blue-900 border border-blue-900  text-blue-200",
         secondary:
           " bg-blue-200 border border-blue-900/60 tracking-widest text-blue-900/40 hover:bg-blue-900/60 hover:border-blue-900/10 hover:text-blue-200",
       },
