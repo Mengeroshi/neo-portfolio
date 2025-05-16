@@ -39,3 +39,7 @@ export const createSongFormSchema = z.object({
   albumSlug: z.string({ required_error: "Album Slug required" }),
 });
 export type TCreateSongFormSchema = z.infer<typeof createSongFormSchema>;
+
+export const deleteSongSchema = z.number({ required_error: "id is required" });
+
+export type TDeleteSongSchema = z.infer<typeof deleteSongSchema>;

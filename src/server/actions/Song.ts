@@ -1,8 +1,9 @@
 "use server";
-import { createSongFormSchema } from "@/types/Song";
+import { createSongFormSchema, deleteSongSchema } from "@/types/Song";
 import { revalidatePath } from "next/cache";
 import { createServerAction } from "zsa";
-import { createSong } from "../mutations/Song";
+import { createSong, deleteSongById } from "../mutations/Song";
+import { z } from "zod";
 
 export const onCreateSongAction = createServerAction()
   .input(createSongFormSchema)
@@ -11,4 +12,19 @@ export const onCreateSongAction = createServerAction()
     revalidatePath("/album/" + input.albumSlug);
 
     return newSong;
+  });
+
+export const onDeleteSongByIdAction = createServerAction()
+  .input(
+    z.object({
+      id: deleteSongSchema,
+      albumSlug: z.string({
+        required_error: "Album Slug is required",
+      }),
+    }),
+  )
+  .handler(async ({ input: { id, albumSlug } }) => {
+    const song = await deleteSongById(id);
+    revalidatePath("/album/" + albumSlug);
+    return song;
   });
