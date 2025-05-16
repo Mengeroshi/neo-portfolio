@@ -33,7 +33,13 @@ const columnHelper = createColumnHelper<
   TAlbumSongs[number] & { number: number }
 >();
 
-const ActionsDropdown = ({ id }: { id: number }) => {
+const ActionsDropdown = ({
+  id,
+  songName,
+}: {
+  id: number;
+  songName: string;
+}) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -62,7 +68,7 @@ const ActionsDropdown = ({ id }: { id: number }) => {
             <DropdownMenuItem
               className="data-[highlighted]:bg-red-900/40 data-[disabled]:text-red-900/20 data-[highlighted]:text-red-200"
               onClick={() => {
-                router.push(`?delete=${id}`);
+                router.push(`?delete=${id}&songName=${songName}`);
               }}
             >
               <TrashIcon /> Delete
@@ -121,9 +127,16 @@ const columns = [
     accessorKey: "actions",
     id: "actions",
     header: "Actions",
-    cell: (info: { row: { original: { id: number } } }) => (
-      <ActionsDropdown id={info.row.original.id} />
-    ),
+    cell: ({
+      row: {
+        original: {
+          id,
+          ContentInfo: { name },
+        },
+      },
+    }: {
+      row: { original: TAlbumSongs[0] };
+    }) => <ActionsDropdown id={id} songName={name} />,
   },
 ];
 

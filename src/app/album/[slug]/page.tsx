@@ -2,6 +2,7 @@ import { Badge } from "@/components/Badges/Badge";
 import { Button } from "@/components/Buttons/Button";
 import { LabelWithUnderLine } from "@/components/Forms/LabelWithUnderline";
 import { PixeledImg } from "@/components/Images/PixeledImg";
+import { DeleteSongModal } from "@/components/Modals/DeleteSongModal";
 import { SongsTable } from "@/components/Tables/SongsTable";
 import { IMGURLPLACEHOLDER } from "@/constants";
 import { getAlbumBySlug, type TAlbumBySlug } from "@/server/queries/Album";
@@ -117,6 +118,7 @@ export default async function Page({
         fullWidth
         href={`/album/${slug}/createSong?companyId=${Company?.id}`}
       />
+      <DeleteSongModal />
     </div>
   );
 }
