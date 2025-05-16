@@ -18,10 +18,10 @@ export const Modal = ({ children }: { children: React.ReactNode }) => {
       dialogRef.current?.showModal();
     }
 
-    document.body.classList.add("blur-[8px]");
+    document.body.classList.add("blur-[4px]");
 
     return () => {
-      document.body.classList.remove("blur-[8px]");
+      document.body.classList.remove("blur-[4px]");
     };
   }, []);
 
